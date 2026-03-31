@@ -25,17 +25,52 @@ module.exports = {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         "chat-user": "hsl(var(--chat-user))",
-        "chat-assistant": "hsl(var(--chat-assistant))"
-      },
-      fontFamily: {
-        display: ["'Space Grotesk'", "ui-sans-serif", "system-ui"],
-        body: ["'DM Sans'", "ui-sans-serif", "system-ui"],
-        mono: ["'JetBrains Mono'", "ui-monospace", "SFMono-Regular"]
+        "chat-assistant": "hsl(var(--chat-assistant))",
+        "bg-base": "var(--bg-base)",
+        "bg-subtle": "var(--bg-subtle)",
+        "bg-muted": "var(--bg-muted)",
+        "bg-overlay": "var(--bg-overlay)",
+        "text-primary": "var(--text-primary)",
+        "text-secondary": "var(--text-secondary)",
+        "text-tertiary": "var(--text-tertiary)",
+        "text-muted": "var(--text-muted)",
+        "accent-600": "var(--accent-600)",
+        "accent-500": "var(--accent-500)",
+        "accent-100": "var(--accent-100)",
+        "accent-200": "var(--accent-200)",
+        "border-default": "var(--border-default)",
+        "border-strong": "var(--border-strong)",
+        "border-focus": "var(--border-focus)",
+        "color-success": "var(--color-success)",
+        "color-warning": "var(--color-warning)",
+        "color-error": "var(--color-error)",
+        "color-info": "var(--color-info)",
+        "sidebar-bg": "var(--sidebar-bg)",
+        "sidebar-text": "var(--sidebar-text)",
+        "sidebar-text-active": "var(--sidebar-text-active)",
+        "sidebar-indicator": "var(--sidebar-indicator)"
       },
       boxShadow: {
         soft: "0 24px 60px -30px rgba(10, 10, 15, 0.65)",
         glow: "0 0 0 1px rgba(59, 130, 246, 0.2), 0 16px 40px rgba(59, 130, 246, 0.25)",
-        neon: "0 0 30px rgba(59, 130, 246, 0.35)"
+        neon: "0 0 30px rgba(59, 130, 246, 0.35)",
+        "xs": "var(--shadow-xs)",
+        "sm": "var(--shadow-sm)",
+        "md": "var(--shadow-md)",
+        "lg": "var(--shadow-lg)"
+      },
+      borderRadius: {
+        "sm": "var(--radius-sm)",
+        "md": "var(--radius-md)",
+        "lg": "var(--radius-lg)",
+        "full": "var(--radius-full)"
+      },
+      fontFamily: {
+        display: ["'Space Grotesk'", "ui-sans-serif", "system-ui"],
+        body: ["'DM Sans'", "ui-sans-serif", "system-ui"],
+        mono: ["'JetBrains Mono'", "ui-monospace", "SFMono-Regular"],
+        sans: ["var(--font-sans)"],
+        mono: ["var(--font-mono)"]
       },
       keyframes: {
         "fade-up": {

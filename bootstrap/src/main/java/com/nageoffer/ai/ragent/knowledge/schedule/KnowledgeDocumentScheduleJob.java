@@ -33,13 +33,14 @@ import com.nageoffer.ai.ragent.knowledge.dao.mapper.KnowledgeDocumentScheduleExe
 import com.nageoffer.ai.ragent.knowledge.dao.mapper.KnowledgeDocumentScheduleMapper;
 import com.nageoffer.ai.ragent.knowledge.enums.DocumentStatus;
 import com.nageoffer.ai.ragent.knowledge.enums.ScheduleRunStatus;
-import com.nageoffer.ai.ragent.knowledge.enums.SourceType;
+import com.nageoffer.ai.ragent.ingestion.domain.enums.SourceType;
 import com.nageoffer.ai.ragent.knowledge.handler.RemoteFileFetcher;
 import com.nageoffer.ai.ragent.knowledge.service.impl.KnowledgeDocumentServiceImpl;
 import com.nageoffer.ai.ragent.rag.dto.StoredFileDTO;
 import com.nageoffer.ai.ragent.rag.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -70,6 +71,7 @@ public class KnowledgeDocumentScheduleJob {
     private final KnowledgeDocumentServiceImpl documentService;
     private final FileStorageService fileStorageService;
     private final RemoteFileFetcher remoteFileFetcher;
+    @Qualifier("knowledgeChunkExecutor")
     private final Executor knowledgeChunkExecutor;
     private final KnowledgeScheduleProperties scheduleProperties;
 

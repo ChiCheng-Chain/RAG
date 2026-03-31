@@ -3,6 +3,19 @@ server:
   servlet:
     context-path: /api/ragent
 
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.nageoffer.ai.ragent
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: assign_id
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
 spring:
   application:
     name: ragent${unique-name:}-service
@@ -12,11 +25,17 @@ spring:
       max-file-size: 50MB
       max-request-size: 100MB
 
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+      schema-locations: classpath:schema_pg.sql
+
   datasource:
     driver-class-name: org.postgresql.Driver
     type: com.zaxxer.hikari.HikariDataSource
     username: postgres
-    password: postgres
+    password: 123456
     url: jdbc:postgresql://127.0.0.1:5432/ragent?client_encoding=UTF8
     hikari:
       connection-timeout: 5000
@@ -30,7 +49,13 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
-      password: 123456
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 16
+          max-idle: 8
+          min-idle: 2
+          max-wait: 2000ms
 
 rag:
   vector:
@@ -46,21 +71,41 @@ rag:
     max-history-messages: 4
     max-history-chars: 500
 
-  rate-limit:
-    global:
-      enabled: true
-      max-concurrent: 1
-      max-wait-seconds: 3
-      lease-seconds: 30
-      poll-interval-ms: 200
+  retrieval:
+    top-k: 5
 
   memory:
+    window-size: 10
     history-keep-turns: 4
     summary-start-turns: 5
     summary-enabled: true
     ttl-minutes: 60
     summary-max-chars: 200
     title-max-length: 30
+
+  intent:
+    confidence-threshold: 0.5
+
+  rewrite:
+    prompt: |
+      你是一个查询改写助手。根据以下对话历史和用户最新问题，将用户问题改写为一个独立、完整、清晰的检索查询。
+      要求：
+      1. 保留用户原始意图
+      2. 补全省略的指代（如"它"、"这个"等）
+      3. 去除与检索无关的客套语
+      4. 只输出改写后的查询，不要解释
+      对话历史：
+      {history}
+      用户问题：{question}
+      改写后的查询：
+
+  rate-limit:
+    global:
+      enabled: true
+      max-concurrent: 50
+      max-wait-seconds: 3
+      lease-seconds: 30
+      poll-interval-ms: 200
 
   semaphore:
     document-upload:
@@ -109,7 +154,7 @@ ai:
         rerank: /api/v1/services/rerank/text-rerank/text-rerank
     siliconflow:
       url: https://api.siliconflow.cn
-      api-key: ${SILICONFLOW_API_KEY:}
+      api-key: sk-iaksdylhvxitcrjxwstoxehgwtsktchkxfcrxqhxteujrtuo
       endpoints:
         chat: /v1/chat/completions
         embedding: /v1/embeddings
@@ -122,27 +167,19 @@ ai:
     message-chunk-size: 1
 
   chat:
-    default-model: qwen3-max
-    deep-thinking-model: qwen3-max
+    default-model: deepseek-v3
+    deep-thinking-model: deepseek-v3
     candidates:
-      - id: qwen-plus
-        provider: bailian
-        model: qwen-plus-latest
-        priority: 1
-      - id: qwen3-max
-        provider: bailian
-        model: qwen3-max
+      - id: deepseek-v3
+        provider: siliconflow
+        model: DeepSeek/DeepSeek-V3
         supports-thinking: true
-        priority: 3
+        priority: 1
       - id: glm-4.7
         provider: siliconflow
         model: Pro/zai-org/GLM-4.7
         supports-thinking: true
         priority: 0
-      - id: qwen3-local
-        provider: ollama
-        model: qwen3:8b-fp16
-        priority: 2
 
   embedding:
     default-model: qwen-emb-8b
@@ -152,28 +189,34 @@ ai:
         model: Qwen/Qwen3-Embedding-8B
         dimension: ${rag.default.dimension}
         priority: 1
-      - id: qwen-emb-local
-        provider: ollama
-        model: qwen3-embedding:8b-fp16
-        dimension: ${rag.default.dimension}
-        priority: 2
 
   rerank:
-    default-model: qwen3-rerank
+    default-model: rerank-noop
     candidates:
-      - id: qwen3-rerank
-        provider: bailian
-        model: qwen3-rerank
-        priority: 1
       - id: rerank-noop
         provider: noop
         model: noop
-        priority: 100
+        priority: 1
+
+  circuit-breaker:
+    failure-threshold: 5
+    cool-down-seconds: 60
+    probe-timeout-seconds: 30
 
 minio:
   url: http://localhost:9000
   access-key-id: minioadmin
   secret-access-key: minioadmin
+  bucket-name: ragent
+
+redisson:
+  single-server-config:
+    address: redis://127.0.0.1:6379
+    connection-pool-size: 16
+    connection-minimum-idle-size: 4
+    idle-connection-timeout: 10000
+    connect-timeout: 10000
+    timeout: 3000
 
 sa-token:
   token-name: Authorization
@@ -183,6 +226,7 @@ sa-token:
   token-style: simple-uuid
   is-log: false
   is-print: false
+  jwt-secret-key: ragent-jwt-secret-key-please-change-in-production
 
 app:
   demo-mode: false

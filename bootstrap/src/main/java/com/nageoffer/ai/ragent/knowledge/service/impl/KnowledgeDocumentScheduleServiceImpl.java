@@ -25,7 +25,7 @@ import com.nageoffer.ai.ragent.knowledge.dao.entity.KnowledgeDocumentScheduleDO;
 import com.nageoffer.ai.ragent.knowledge.dao.entity.KnowledgeDocumentScheduleExecDO;
 import com.nageoffer.ai.ragent.knowledge.dao.mapper.KnowledgeDocumentScheduleExecMapper;
 import com.nageoffer.ai.ragent.knowledge.dao.mapper.KnowledgeDocumentScheduleMapper;
-import com.nageoffer.ai.ragent.knowledge.enums.SourceType;
+import com.nageoffer.ai.ragent.ingestion.domain.enums.SourceType;
 import com.nageoffer.ai.ragent.knowledge.schedule.CronScheduleHelper;
 import com.nageoffer.ai.ragent.knowledge.service.KnowledgeDocumentScheduleService;
 import lombok.RequiredArgsConstructor;

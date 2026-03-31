@@ -157,90 +157,88 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     <>
       <div
         className={cn(
-          "fixed inset-0 z-30 bg-slate-900/30 backdrop-blur-sm transition-opacity lg:hidden",
+          "fixed inset-0 z-30 backdrop-blur-sm transition-opacity lg:hidden",
           isOpen ? "opacity-100" : "pointer-events-none opacity-0"
         )}
+        style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}
         onClick={onClose}
       />
       <aside
         className={cn(
-          "fixed left-0 top-0 z-40 flex h-screen w-[280px] flex-shrink-0 flex-col bg-[#FAFAFA] p-3 transition-transform lg:static lg:h-screen lg:translate-x-0",
+          "fixed left-0 top-0 z-40 flex h-screen flex-shrink-0 flex-col p-3 transition-transform lg:static lg:h-screen lg:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
+        style={{ width: 'var(--sidebar-width, 260px)', backgroundColor: 'var(--bg-subtle)', borderRight: '1px solid var(--border-default)' }}
       >
-        <div className="border-b border-[#F0F0F0] pb-3">
+        <div className="border-b pb-3" style={{ borderColor: 'var(--border-default)' }}>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#3B82F6]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: 'var(--accent-600)' }}>
               <Bot className="h-5 w-5 text-white" />
             </div>
             <div style={{ fontFamily: sessionTitleFont }}>
-              <p className="text-base font-semibold text-[#1A1A1A]">Ragent AI 智能体</p>
-              <p className="text-xs text-[#999999]">Powered by AI</p>
+              <p className="text-base font-semibold" style={{ color: 'var(--text-primary)' }}>Ragent <span style={{ color: 'var(--accent-500)' }}>AI</span></p>
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Powered by AI</p>
             </div>
           </div>
         </div>
         <div className="py-3 space-y-4">
-          <div className="relative overflow-hidden rounded-2xl border border-[#E6EEF6] bg-gradient-to-br from-[#F0F9FF] via-white to-[#FEF3C7] p-3 shadow-[0_14px_30px_rgba(15,23,42,0.08)]">
-            <span
-              aria-hidden="true"
-              className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#BAE6FD]/70 blur-2xl"
-            />
-            <span
-              aria-hidden="true"
-              className="absolute -left-12 -bottom-10 h-28 w-28 rounded-full bg-[#FDE68A]/70 blur-2xl"
-            />
-            <div className="relative">
-              <div className="flex items-center justify-between px-1">
-                <span className="text-[11px] font-semibold text-[#94A3B8]">快速开始</span>
-                <span className="rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-semibold text-[#2563EB]">
-                  新内容
-                </span>
-              </div>
+          <div 
+            className="relative overflow-hidden rounded-lg border p-3 transition-all"
+            style={{ borderColor: 'var(--border-default)', backgroundColor: 'var(--bg-base)', boxShadow: 'var(--shadow-sm)' }}
+          >
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>快速开始</span>
+            </div>
+            <button
+              type="button"
+              className="mt-2 flex w-full items-center gap-3 rounded-md border px-4 py-2.5 text-left transition-all hover:bg-[var(--bg-muted)]"
+              style={{ borderColor: 'var(--border-default)', color: 'var(--text-secondary)' }}
+              onClick={() => {
+                createSession().catch(() => null);
+                navigate("/chat");
+                onClose();
+              }}
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-md" style={{ backgroundColor: 'var(--accent-600)' }}>
+                <Plus className="h-4 w-4 text-white" />
+              </span>
+              <span className="flex-1">
+                <span className="block text-sm font-medium" style={{ color: 'var(--text-primary)' }}>新建对话</span>
+                <span className="block text-xs" style={{ color: 'var(--text-muted)' }}>从空白开始</span>
+              </span>
+            </button>
+            {user?.role === "admin" ? (
               <button
                 type="button"
-                className="mt-2 flex w-full items-center gap-3 rounded-2xl bg-white/90 px-4 py-3 text-left shadow-[0_10px_20px_rgba(15,23,42,0.08)] transition-all hover:-translate-y-[1px] hover:shadow-[0_16px_30px_rgba(15,23,42,0.12)]"
+                className="mt-2 inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-[var(--bg-muted)]"
+                style={{ borderColor: 'var(--border-default)', color: 'var(--accent-600)' }}
                 onClick={() => {
-                  createSession().catch(() => null);
-                  navigate("/chat");
+                  window.open("/admin", "_blank");
                   onClose();
                 }}
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#60A5FA] to-[#2563EB] text-white shadow-[0_6px_14px_rgba(37,99,235,0.3)]">
-                  <Plus className="h-4 w-4" />
-                </span>
-                <span className="flex-1">
-                  <span className="block text-sm font-semibold text-[#1F2937]">新建对话</span>
-                  <span className="block text-xs text-[#94A3B8]">从空白开始</span>
-                </span>
+                <Settings className="h-3.5 w-3.5" />
+                管理后台
               </button>
-              {user?.role === "admin" ? (
-                <button
-                  type="button"
-                  className="mt-2 inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/70 px-3 py-1.5 text-xs font-semibold text-[#1D4ED8] transition-colors hover:bg-white"
-                  onClick={() => {
-                    window.open("/admin", "_blank");
-                    onClose();
-                  }}
-                >
-                  <Settings className="h-3.5 w-3.5" />
-                  管理后台
-                </button>
-              ) : null}
-            </div>
+            ) : null}
           </div>
-          <div className="rounded-2xl border border-[#E6EEF6] bg-white p-3 shadow-[0_12px_26px_rgba(15,23,42,0.06)]">
+          <div 
+            className="rounded-md border p-3"
+            style={{ borderColor: 'var(--border-default)', backgroundColor: 'var(--bg-base)' }}
+          >
             <div className="flex items-center justify-between px-1">
-              <span className="text-[11px] font-semibold text-[#94A3B8]">搜索对话</span>
-              <span className="text-[10px] text-[#CBD5F5]">Ctrl / Cmd + K</span>
+              <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>搜索对话</span>
             </div>
             <div className="mt-2">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9CA3AF]" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: 'var(--text-muted)' }} />
                 <input
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   placeholder="搜索对话..."
-                  className="h-10 w-full rounded-xl border border-[#E5E7EB] bg-[#F8FAFC] pl-9 pr-3 text-sm text-[#1F2937] placeholder:text-[#9CA3AF] focus:border-[#93C5FD] focus:outline-none transition-colors"
+                  className="h-[34px] w-full rounded-md border pl-9 pr-3 text-sm transition-colors"
+                  style={{ borderColor: 'var(--border-default)', backgroundColor: 'var(--bg-base)', color: 'var(--text-primary)' }}
+                  placeholderStyle={{ color: 'var(--text-muted)' }}
                 />
               </div>
             </div>
@@ -250,15 +248,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           <div className="h-full overflow-y-auto sidebar-scroll">
             {sessions.length === 0 && (!sessionsLoaded || isLoading) ? (
               <div
-                className="flex h-full items-center justify-center text-[#999999]"
-                style={{ fontFamily: sessionTitleFont }}
+                className="flex h-full items-center justify-center"
+                style={{ color: 'var(--text-muted)', fontFamily: sessionTitleFont }}
               >
                 <Loading label="加载会话中" />
               </div>
             ) : filteredSessions.length === 0 ? (
               <div
-                className="flex h-full flex-col items-center justify-center text-[#999999]"
-                style={{ fontFamily: sessionTitleFont }}
+                className="flex h-full flex-col items-center justify-center"
+                style={{ color: 'var(--text-muted)', fontFamily: sessionTitleFont }}
               >
                 <MessageSquare className="h-16 w-16" />
                 <p className="mt-2 text-[14px]">暂无对话记录</p>
@@ -267,18 +265,19 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               <div>
                 {groupedSessions.map((group, index) => (
                   <div key={group.label} className={cn("flex flex-col", index === 0 ? "mt-0" : "mt-4")}>
-                    <p className="mb-1.5 pl-3 text-[12px] font-normal leading-[18px] text-[#999999]">
+                    <p className="mb-1.5 pl-3 text-[11px] font-medium uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>
                       {group.label}
                     </p>
                     {group.items.map((session) => (
                       <div
                         key={session.id}
                         className={cn(
-                          "group my-[1px] flex min-h-[40px] cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-2 text-[14px] leading-[22px] transition-colors duration-200",
+                          "group my-[1px] flex min-h-[36px] cursor-pointer items-center justify-between gap-2 rounded-md px-3 py-2 text-sm transition-colors duration-200",
                           currentSessionId === session.id
-                            ? "bg-[#DBEAFE] text-[#2563EB]"
-                            : "text-[#333333] hover:bg-[#F5F5F5]"
+                            ? "text-[var(--accent-600)]"
+                            : "hover:bg-[var(--bg-muted)]"
                         )}
+                        style={currentSessionId === session.id ? { backgroundColor: 'var(--accent-100)' } : { color: 'var(--text-secondary)' }}
                         role="button"
                         tabIndex={0}
                         onClick={() => {
@@ -317,7 +316,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                             onBlur={() => {
                               commitRename().catch(() => null);
                             }}
-                            className="h-6 flex-1 rounded-md border border-[#E5E5E5] bg-white px-2 text-[14px] leading-[22px] text-[#333333] focus:border-[#2563EB] focus:outline-none"
+                            className="h-6 flex-1 rounded-md border px-2 text-sm focus:outline-none"
+                            style={{ borderColor: 'var(--border-focus)', backgroundColor: 'var(--bg-base)', color: 'var(--text-primary)' }}
                           />
                         ) : (
                           <span className="min-w-0 flex-1 truncate font-normal">
@@ -329,11 +329,12 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                             <button
                               type="button"
                               className={cn(
-                                "flex h-6 w-6 items-center justify-center rounded text-[#666666] transition-opacity duration-150 hover:bg-[rgba(0,0,0,0.06)]",
+                                "flex h-6 w-6 items-center justify-center rounded transition-opacity duration-150",
                                 currentSessionId === session.id
-                                  ? "pointer-events-auto opacity-100 text-[#2563EB]"
+                                  ? "pointer-events-auto opacity-100"
                                   : "pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100"
                               )}
+                              style={{ color: 'var(--text-tertiary)' }}
                               onClick={(event) => event.stopPropagation()}
                               aria-label="会话操作"
                             >
@@ -342,14 +343,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
                             align="start"
-                            className="min-w-[120px] rounded-lg border-0 bg-white p-0 py-1 shadow-[0_4px_16px_rgba(0,0,0,0.12)]"
+                            className="min-w-[120px] rounded-lg border-0 p-0 py-1"
+                            style={{ backgroundColor: 'var(--bg-base)', boxShadow: 'var(--shadow-md)' }}
                           >
                             <DropdownMenuItem
                               onClick={(event) => {
                                 event.stopPropagation();
                                 startRename(session.id, session.title || "新对话");
                               }}
-                              className="px-4 py-2 text-[14px] text-[#333333] focus:bg-[#F5F5F5] focus:text-[#333333] data-[highlighted]:bg-[#F5F5F5] data-[highlighted]:text-[#333333]"
+                              className="px-4 py-2 text-sm focus:bg-[var(--bg-muted)]"
+                              style={{ color: 'var(--text-primary)' }}
                             >
                               <Pencil className="mr-2 h-4 w-4" />
                               重命名
@@ -362,7 +365,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                   title: session.title || "新对话"
                                 });
                               }}
-                              className="px-4 py-2 text-[14px] text-[#FF4D4F] focus:bg-[#F5F5F5] focus:text-[#FF4D4F] data-[highlighted]:bg-[#F5F5F5] data-[highlighted]:text-[#FF4D4F]"
+                              className="px-4 py-2 text-sm focus:bg-[var(--bg-muted)]"
+                              style={{ color: 'var(--color-error)' }}
                             >
                               <Trash2 className="mr-2 h-4 w-4" />
                               删除
@@ -378,7 +382,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           </div>
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-5 bg-gradient-to-b from-transparent to-[#FAFAFA]"
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-5 bg-gradient-to-b from-transparent"
+            style={{ backgroundColor: 'var(--bg-subtle)' }}
           />
         </div>
         <div className="mt-auto pt-3">
@@ -386,54 +391,20 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className="flex w-full items-center gap-2 rounded-lg p-2 text-left transition-colors hover:bg-[#F5F5F5] data-[state=open]:bg-[#EEEEEE]"
+                className="flex w-full items-center gap-2 rounded-lg p-2 text-left transition-colors hover:bg-[var(--bg-muted)]"
                 aria-label="用户菜单"
               >
-                <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[#3B82F6] text-white">
-                  {showAvatar ? (
-                    <img
-                      src={avatarUrl}
-                      alt={user?.username || user?.userId || "用户"}
-                      className="h-full w-full object-cover"
-                      onError={() => setAvatarFailed(true)}
-                    />
-                  ) : (
-                    <span className="text-sm font-medium">{avatarFallback}</span>
-                  )}
-                </div>
-                <span className="flex-1 truncate text-sm font-medium text-[#1A1A1A]">
+                <span className="flex-1 truncate text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
                   {(() => {
                     const fallback = user?.username || user?.userId || "用户";
                     return /^\d+$/.test(fallback) ? "用户" : fallback;
                   })()}
                 </span>
-                <MoreHorizontal className="h-4 w-4 text-[#999999]" />
+                <MoreHorizontal className="h-4 w-4" style={{ color: 'var(--text-muted)' }} />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" side="top" sideOffset={8} className="w-48">
-              <DropdownMenuItem asChild>
-                <a
-                  href="https://nageoffer.com/ragent"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center"
-                >
-                  <BookOpen className="mr-2 h-4 w-4" />
-                  官方文档
-                </a>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <a
-                  href="https://space.bilibili.com/352177376"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center"
-                >
-                  <PlayCircle className="mr-2 h-4 w-4" />
-                  哔哩哔哩
-                </a>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => logout()} className="text-rose-600 focus:text-rose-600">
+              <DropdownMenuItem onClick={() => logout()} className="focus:text-rose-600" style={{ color: 'var(--color-error)' }}>
                 <LogOut className="mr-2 h-4 w-4" />
                 退出登录
               </DropdownMenuItem>

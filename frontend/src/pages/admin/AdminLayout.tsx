@@ -688,19 +688,6 @@ export function AdminLayout() {
                 <MessageSquare className="h-4 w-4" />
                 返回聊天
               </Button>
-              <a
-                href="https://github.com/nageoffer/ragent"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
-                aria-label="打开 GitHub 仓库"
-              >
-                <Github className="h-4 w-4" />
-                <span className="font-medium">Star</span>
-                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
-                  {starLabel}
-                </span>
-              </a>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
@@ -708,11 +695,6 @@ export function AdminLayout() {
                     className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-600 shadow-sm"
                     aria-label="用户菜单"
                   >
-                    <Avatar
-                      name={user?.username || "管理员"}
-                      src={showAvatar ? avatarUrl : undefined}
-                      className="h-8 w-8 border-slate-200 bg-indigo-50 text-xs font-semibold text-indigo-600"
-                    />
                     <span className="hidden sm:inline">{user?.username || "管理员"}</span>
                     <ChevronDown className="h-4 w-4 text-slate-400" />
                   </button>

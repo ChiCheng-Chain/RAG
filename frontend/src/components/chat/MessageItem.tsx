@@ -43,33 +43,35 @@ export const MessageItem = React.memo(function MessageItem({ message, isLast }: 
           <ThinkingIndicator content={message.thinking} duration={message.thinkingDuration} />
         ) : null}
         {!isThinking && hasThinking ? (
-          <div className="overflow-hidden rounded-lg border border-[#BFDBFE] bg-[#DBEAFE]">
+          <div className="overflow-hidden rounded-lg border" style={{ borderColor: 'var(--accent-200)', backgroundColor: 'var(--accent-100)' }}>
             <button
               type="button"
               onClick={() => setThinkingExpanded((prev) => !prev)}
-              className="flex w-full items-center gap-2 px-4 py-3 text-left transition-colors hover:bg-[#BFDBFE]/30"
+              className="flex w-full items-center gap-2 px-4 py-3 text-left transition-colors hover:opacity-80"
+              style={{ color: 'var(--accent-600)' }}
             >
               <div className="flex flex-1 items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#BFDBFE]">
-                  <Brain className="h-4 w-4 text-[#2563EB]" />
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ backgroundColor: 'var(--accent-200)' }}>
+                  <Brain className="h-4 w-4" style={{ color: 'var(--accent-600)' }} />
                 </div>
-                <span className="text-sm font-medium text-[#2563EB]">深度思考</span>
+                <span className="text-sm font-medium">深度思考</span>
                 {thinkingDuration ? (
-                  <span className="rounded-full bg-[#BFDBFE] px-2 py-0.5 text-xs text-[#2563EB]">
+                  <span className="rounded-full px-2 py-0.5 text-xs" style={{ backgroundColor: 'var(--accent-200)', color: 'var(--accent-600)' }}>
                     {thinkingDuration}
                   </span>
                 ) : null}
               </div>
               <ChevronDown
                 className={cn(
-                  "h-4 w-4 text-[#3B82F6] transition-transform",
+                  "h-4 w-4 transition-transform",
                   thinkingExpanded && "rotate-180"
                 )}
+                style={{ color: 'var(--accent-600)' }}
               />
             </button>
             {thinkingExpanded ? (
-              <div className="border-t border-[#BFDBFE] px-4 pb-4">
-                <div className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-[#1E40AF]">
+              <div className="border-t px-4 pb-4" style={{ borderColor: 'var(--accent-200)' }}>
+                <div className="mt-3 whitespace-pre-wrap text-sm leading-relaxed" style={{ color: 'var(--accent-600)' }}>
                   {message.thinking}
                 </div>
               </div>

@@ -62,7 +62,7 @@ import com.nageoffer.ai.ragent.knowledge.dao.mapper.KnowledgeDocumentChunkLogMap
 import com.nageoffer.ai.ragent.knowledge.dao.mapper.KnowledgeDocumentMapper;
 import com.nageoffer.ai.ragent.knowledge.enums.DocumentStatus;
 import com.nageoffer.ai.ragent.knowledge.enums.ProcessMode;
-import com.nageoffer.ai.ragent.knowledge.enums.SourceType;
+import com.nageoffer.ai.ragent.ingestion.domain.enums.SourceType;
 import com.nageoffer.ai.ragent.knowledge.handler.RemoteFileFetcher;
 import com.nageoffer.ai.ragent.knowledge.mq.event.KnowledgeDocumentChunkEvent;
 import com.nageoffer.ai.ragent.knowledge.schedule.CronScheduleHelper;
@@ -121,7 +121,7 @@ public class KnowledgeDocumentServiceImpl implements KnowledgeDocumentService {
         KnowledgeBaseDO kbDO = knowledgeBaseMapper.selectById(kbId);
         Assert.notNull(kbDO, () -> new ClientException("知识库不存在"));
 
-        SourceType sourceType = SourceType.normalize(requestParam.getSourceType());
+        SourceType sourceType = SourceType.fromValue(requestParam.getSourceType());
         validateSourceAndSchedule(sourceType, requestParam);
         StoredFileDTO stored = resolveStoredFile(kbDO.getCollectionName(), sourceType, requestParam.getSourceLocation(), file);
         ProcessModeConfig modeConfig = resolveProcessModeConfig(requestParam);
