@@ -17,19 +17,11 @@
 
 package com.nageoffer.ai.ragent.index;
 
-import cn.hutool.core.util.IdUtil;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.nageoffer.ai.ragent.rag.config.RAGDefaultProperties;
 import com.nageoffer.ai.ragent.framework.convention.ChatMessage;
 import com.nageoffer.ai.ragent.framework.convention.ChatRequest;
 import com.nageoffer.ai.ragent.framework.convention.RetrievedChunk;
 import com.nageoffer.ai.ragent.infra.chat.LLMService;
-import com.nageoffer.ai.ragent.infra.embedding.EmbeddingService;
 import com.nageoffer.ai.ragent.rag.core.retrieve.RetrieverService;
-import io.milvus.v2.client.MilvusClientV2;
-import io.milvus.v2.service.vector.request.InsertReq;
-import io.milvus.v2.service.vector.response.InsertResp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.Tika;
@@ -47,7 +39,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -56,34 +47,9 @@ import java.util.stream.Collectors;
 public class InvoiceIndexDocumentTests {
 
     private final LLMService llmService;
-    private final EmbeddingService embeddingService;
-    private final MilvusClientV2 milvusClient;
     private final RetrieverService retrieverService;
-    private final RAGDefaultProperties ragDefaultProperties;
 
     private final Tika tika = new Tika();
-
-    @Test
-    void indexDocument() throws TikaException, IOException {
-        String filePath = "src/main/resources/file/group/group-finance/开票信息.md";
-        String actualDocument = extractText(filePath);
-        System.out.println(actualDocument);
-        List<String> chunks = splitIntoLineChunks(actualDocument, 5);
-
-        String docId = UUID.randomUUID().toString();
-        List<JsonObject> rows = buildRowsForChunks(
-                docId,
-                chunks
-        );
-
-        InsertReq req = InsertReq.builder()
-                .collectionName(ragDefaultProperties.getCollectionName())
-                .data(rows)
-                .build();
-
-        InsertResp resp = milvusClient.insert(req);
-        log.info("Indexed file document. documentId={},  chunks={}, insertCnt={}", docId, chunks.size(), resp.getInsertCnt());
-    }
 
     @Test
     public void chatLlmQuery() {
@@ -308,43 +274,4 @@ public class InvoiceIndexDocumentTests {
         return chunks;
     }
 
-    /**
-     * 构造一批向量插入行
-     */
-    private List<JsonObject> buildRowsForChunks(String documentId,
-                                                List<String> chunks) {
-        List<JsonObject> rows = new ArrayList<>();
-        long now = System.currentTimeMillis();
-
-        for (int i = 0; i < chunks.size(); i++) {
-            String chunk = chunks.get(i);
-            if (!StringUtils.hasText(chunk)) continue;
-
-            List<Float> emb = embeddingService.embed(chunk);
-
-            JsonObject row = new JsonObject();
-            // 每个 chunk 一个独立主键
-            row.addProperty("doc_id", IdUtil.getSnowflakeNextIdStr());
-            row.add("embedding", floatListToJson(emb));
-            row.addProperty("content", chunk);
-
-            JsonObject metadata = new JsonObject();
-            metadata.addProperty("documentId", documentId);
-            metadata.addProperty("chunkIndex", i);
-            metadata.addProperty("totalChunks", chunks.size());
-            metadata.addProperty("timestamp", now);
-            row.add("metadata", metadata);
-
-            rows.add(row);
-        }
-
-        return rows;
-    }
-
-
-    private JsonArray floatListToJson(List<Float> list) {
-        JsonArray arr = new JsonArray();
-        list.forEach(arr::add);
-        return arr;
-    }
 }
