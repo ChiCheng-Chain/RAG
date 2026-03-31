@@ -30,18 +30,17 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import java.net.URI;
 
 /**
- * RustFS S3 客户端配置类
- * 用于配置和初始化与 RustFS 对象存储服务交互的 S3 客户端
+ * MinIO S3 客户端配置类
  */
 @Configuration
-public class RestFSS3Config {
+public class MinIOConfig {
 
     @Bean
-    public S3Client s3Client(@Value("${rustfs.url}") String rustfsUrl,
-                             @Value("${rustfs.access-key-id}") String accessKeyId,
-                             @Value("${rustfs.secret-access-key}") String secretAccessKey) {
+    public S3Client s3Client(@Value("${minio.url}") String minioUrl,
+                             @Value("${minio.access-key-id}") String accessKeyId,
+                             @Value("${minio.secret-access-key}") String secretAccessKey) {
         return S3Client.builder()
-                .endpointOverride(URI.create(rustfsUrl))
+                .endpointOverride(URI.create(minioUrl))
                 .region(Region.US_EAST_1)
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
@@ -52,16 +51,12 @@ public class RestFSS3Config {
                 .build();
     }
 
-    /**
-     * S3 预签名器，用于生成预签名 URL
-     * 签名在 URL query 参数中完成，配合 HttpURLConnection 实现零堆内存的流式文件上传
-     */
     @Bean
-    public S3Presigner s3Presigner(@Value("${rustfs.url}") String rustfsUrl,
-                                   @Value("${rustfs.access-key-id}") String accessKeyId,
-                                   @Value("${rustfs.secret-access-key}") String secretAccessKey) {
+    public S3Presigner s3Presigner(@Value("${minio.url}") String minioUrl,
+                                   @Value("${minio.access-key-id}") String accessKeyId,
+                                   @Value("${minio.secret-access-key}") String secretAccessKey) {
         return S3Presigner.builder()
-                .endpointOverride(URI.create(rustfsUrl))
+                .endpointOverride(URI.create(minioUrl))
                 .region(Region.US_EAST_1)
                 .credentialsProvider(
                         StaticCredentialsProvider.create(

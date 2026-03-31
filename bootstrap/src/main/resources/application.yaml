@@ -176,10 +176,10 @@ ai:
         model: noop
         priority: 100
 
-rustfs:
+minio:
   url: http://localhost:9000
-  access-key-id: rustfsadmin
-  secret-access-key: rustfsadmin
+  access-key-id: minioadmin
+  secret-access-key: minioadmin
 
 sa-token:
   token-name: Authorization
