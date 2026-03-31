@@ -15,40 +15,34 @@
  * limitations under the License.
  */
 
-package com.nageoffer.ai.ragent.knowledge.mq;
+package com.nageoffer.ai.ragent.knowledge.event;
 
 import com.nageoffer.ai.ragent.framework.context.LoginUser;
 import com.nageoffer.ai.ragent.framework.context.UserContext;
-import com.nageoffer.ai.ragent.framework.mq.MessageWrapper;
 import com.nageoffer.ai.ragent.knowledge.mq.event.KnowledgeDocumentChunkEvent;
 import com.nageoffer.ai.ragent.knowledge.service.KnowledgeDocumentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
-import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
- * 文档分块任务 MQ 消费者
- * 负责异步执行耗时的文本提取、分块、向量嵌入及写库操作
+ * 文档分块任务事件监听器
+ * 替代原 RocketMQ KnowledgeDocumentChunkConsumer，在事务提交后异步执行分块任务
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@RocketMQMessageListener(
-        topic = "knowledge-document-chunk_topic${unique-name:}",
-        consumerGroup = "knowledge-document-chunk_cg${unique-name:}"
-)
-public class KnowledgeDocumentChunkConsumer implements RocketMQListener<MessageWrapper<KnowledgeDocumentChunkEvent>> {
+public class KnowledgeDocumentChunkEventListener {
 
     private final KnowledgeDocumentService documentService;
 
-    @Override
-    public void onMessage(MessageWrapper<KnowledgeDocumentChunkEvent> message) {
-        KnowledgeDocumentChunkEvent event = message.getBody();
-
-        log.info("[消费者] 开始消费文档分块任务，docId={}, keys={}", event.getDocId(), message.getKeys());
-
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void onEvent(KnowledgeDocumentChunkEvent event) {
+        log.info("[事件监听] 开始执行文档分块任务，docId={}, operator={}", event.getDocId(), event.getOperator());
         UserContext.set(LoginUser.builder().username(event.getOperator()).build());
         try {
             documentService.executeChunk(event.getDocId());
