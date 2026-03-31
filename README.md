@@ -1,20 +1,8 @@
 # Ragent AI 企业级 RAG 智能体平台
 
-<p align="center">
-  <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="License">
-  <img src="https://img.shields.io/badge/Java-17-ff7f2a.svg" alt="Java">
-  <img src="https://img.shields.io/badge/Spring%20Boot-3.5.x-6db33f.svg" alt="Spring Boot">
-  <img src="https://img.shields.io/badge/PostgreSQL-16+-336791.svg" alt="PostgreSQL">
-  <img src="https://img.shields.io/badge/React-18-61dafb.svg" alt="React">
-</p>
-
-> 从 0 到 1 纯手工打造，一套真正能落地、经得起推敲的 Agentic RAG 系统。深入底层设计细节，覆盖全链路核心能力。
-
 ## 项目简介
 
-Ragent 是一个模仿企业级生产环境的 RAG 智能体平台，由个人从 0 到 1 独立开发（Speccoding）。项目严格按照企业级工程标准构建，从架构设计到每一行代码都经过精心打磨，力求还原真实生产环境中 RAG 系统的完整面貌。
-
-如果你想学习企业级 RAG 系统是如何设计的，想了解一个完整的 RAG 项目从 0 到 1 是如何构建的，Ragent 可以作为你学习和参考的实战案例。
+Ragent 是一个模仿企业级生产环境的 RAG 智能体平台。项目模仿企业级工程标准构建。
 
 ### 核心特性
 
