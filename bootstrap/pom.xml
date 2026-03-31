@@ -28,11 +28,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>io.milvus</groupId>
-            <artifactId>milvus-sdk-java</artifactId>
-        </dependency>
-
         <!-- 解析 PDF / DOC / DOCX / Markdown 等 -->
         <dependency>
             <groupId>org.apache.tika</groupId>
