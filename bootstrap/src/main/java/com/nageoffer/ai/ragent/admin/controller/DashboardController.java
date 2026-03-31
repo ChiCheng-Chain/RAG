@@ -37,19 +37,19 @@ public class DashboardController {
     private final DashboardService dashboardService;
 
     @GetMapping("/overview")
-    public Result<DashboardOverviewVO> overview(@RequestParam(required = false) String window) {
+    public Result<DashboardOverviewVO> overview(@RequestParam(value = "window", required = false) String window) {
         return Results.success(dashboardService.loadOverview(window));
     }
 
     @GetMapping("/performance")
-    public Result<DashboardPerformanceVO> performance(@RequestParam(required = false) String window) {
+    public Result<DashboardPerformanceVO> performance(@RequestParam(value = "window", required = false) String window) {
         return Results.success(dashboardService.loadPerformance(window));
     }
 
     @GetMapping("/trends")
-    public Result<DashboardTrendsVO> trends(@RequestParam String metric,
-                                            @RequestParam(required = false) String window,
-                                            @RequestParam(required = false) String granularity) {
+    public Result<DashboardTrendsVO> trends(@RequestParam(value = "metric") String metric,
+                                            @RequestParam(value = "window", required = false) String window,
+                                            @RequestParam(value = "granularity", required = false) String granularity) {
         return Results.success(dashboardService.loadTrends(metric, window, granularity));
     }
 }
